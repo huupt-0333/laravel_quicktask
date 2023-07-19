@@ -2,6 +2,16 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        <!-- Change Language -->
+        <div class="flex justify-end">
+            <x-nav-link :href="route('locale', ['lang' => 'vi'])">
+                {{ __('VI') }}
+            </x-nav-link>
+            <x-nav-link :href="route('locale', ['lang' => 'en'])">
+                {{ __('EN') }}
+            </x-nav-link>
+        </div>
+
         <!-- First Name -->
         <div>
             <x-input-label for="first-name" :value="__('First Name')" />
