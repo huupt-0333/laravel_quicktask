@@ -1,0 +1,21 @@
+{
+  "name": "laravel-quicktask",
+  "description": "",
+  "main": "",
+  "authors": [
+    "huupt-0333 <pham.tien.huu@sun-asterisk.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/huupt-0333/laravel_quicktask",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Laravel-CRUD-With-Multiple-Image-Upload": "huupt-0333/Laravel-CRUD-With-Multiple-Image-Upload"
+  }
+}
