@@ -27,11 +27,12 @@ Route::prefix('/users')
     ->group(function () {
         Route::get('/', 'index')->name('users.index');
         Route::get('/create', 'create')->name('users.create');
-        Route::get('/edit', 'edit')->name('users.edit');
+        Route::get('/{user}/edit', 'edit')->name('users.edit');
         Route::get('/{user}', 'show')->name('users.show');
         Route::post('/', 'store')->name('users.store');
         Route::put('/{user}', 'update')->name('users.update');
         Route::delete('/{user}', 'destroy')->name('users.destroy');
+        Route::get('/{user}/tasks', 'tasks')->name('users.tasks');
     });
 
 Route::resource('tasks', TaskController::class);

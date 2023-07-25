@@ -12,7 +12,16 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return view('users.index', [
+            'users' => User::all(),
+        ]);
+    }
+
+    public function tasks(User $user)
+    {
+        return view('tasks.index', [
+            'tasks' => $user->tasks,
+        ]);
     }
 
     /**
@@ -42,9 +51,9 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(Request $request, User $user)
     {
-        //
+        return view('users.edit', compact('user'));
     }
 
     /**
@@ -52,7 +61,12 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $user->username = $request->name;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->save();
+
+        return back();
     }
 
     /**
