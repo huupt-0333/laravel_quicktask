@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
@@ -12,15 +16,19 @@ class UserController extends Controller
      */
     public function index()
     {
+        $users = User::with('tasks')->get();
+
         return view('users.index', [
-            'users' => User::all(),
+            'users' => $users,
         ]);
     }
 
-    public function tasks(User $user)
+    public function getTasksByUser(User $user)
     {
+        $tasks = $user->tasks;
+        
         return view('tasks.index', [
-            'tasks' => $user->tasks,
+            'tasks' => $tasks,
         ]);
     }
 
@@ -29,15 +37,24 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('users.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $user = new User();
+        $user->fill($validated);
+        $user->password = Hash::make($validated['password']);
+        $user->is_admin = false;
+        $user->is_active = true;
+        $user->save();
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -45,7 +62,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return view('users.show', compact('user'));
     }
 
     /**
@@ -59,11 +76,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $user->username = $request->name;
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
+        $validated = $request->validated();
+
+        $user->fill($validated);
         $user->save();
 
         return back();
@@ -74,6 +91,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return back();
     }
 }
