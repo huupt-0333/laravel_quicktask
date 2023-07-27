@@ -21,6 +21,7 @@
                 <thead>
                     <tr>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">#</th>
+                        <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Created At") }}</th>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Name") }}</th>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Description") }}</th>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Action") }}</th>
@@ -30,6 +31,7 @@
                     @foreach ($tasks as $index => $task)
                         <tr class="cursor-pointer" onclick="window.location='{{ route('tasks.show', ['task' => $task->id]) }}';">
                             <th class="text-gray-900 dark:text-gray-100 text-center" scope="row">{{ $index }}</th>
+                            <td class="text-gray-900 dark:text-gray-100 text-center">{{ formatDate($task->created_at, 'd/m/Y') }}</td>
                             <td class="text-gray-900 dark:text-gray-100 text-center">{{ $task->name }}</td>
                             <td class="text-gray-900 dark:text-gray-100 text-center">{{ $task->description }}</td>
                             <td class="text-gray-900 dark:text-gray-100 text-center">

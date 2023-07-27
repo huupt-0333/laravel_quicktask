@@ -42,6 +42,16 @@
                     disabled 
                     autocomplete="last_name" />
             </div>
+            <div class="mt-4">
+                <x-input-label for="created-at" :value="__('Created At')" />
+
+                <x-text-input id="name" class="block mt-1 w-full" 
+                    type="text" 
+                    name="created_at" 
+                    value="{{ formatDate($user->created_at) }}" 
+                    disabled 
+                    autocomplete="created_at" />
+            </div>
         </div>
     </div>
 </x-app-layout>
