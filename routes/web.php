@@ -32,7 +32,7 @@ Route::prefix('/users')
         Route::post('/', 'store')->name('users.store');
         Route::put('/{user}', 'update')->name('users.update');
         Route::delete('/{user}', 'destroy')->name('users.destroy');
-        Route::get('/{user}/tasks', 'tasks')->name('users.tasks');
+        Route::get('/{user}/tasks', 'getTasksByUser')->name('users.tasks');
     });
 
 Route::resource('tasks', TaskController::class);

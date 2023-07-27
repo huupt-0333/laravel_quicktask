@@ -28,19 +28,28 @@
                 </thead>
                 <tbody>
                     @foreach ($tasks as $index => $task)
-                        <tr>
+                        <tr class="cursor-pointer" onclick="window.location='{{ route('tasks.show', ['task' => $task->id]) }}';">
                             <th class="text-gray-900 dark:text-gray-100 text-center" scope="row">{{ $index }}</th>
                             <td class="text-gray-900 dark:text-gray-100 text-center">{{ $task->name }}</td>
                             <td class="text-gray-900 dark:text-gray-100 text-center">{{ $task->description }}</td>
                             <td class="text-gray-900 dark:text-gray-100 text-center">
-                                <a href="{{ route('tasks.edit', ['task' => $task->id]) }}">
-                                    <x-secondary-button class="mt-4">
-                                        {{ __('Edit') }}
-                                    </x-secondary-button>
-                                </a>
-                                <x-danger-button class="mt-4">
-                                    {{ __('Delete') }}
-                                </x-danger-button>
+                                @if ($task->user_id == Auth::user()->id)
+                                    <a href="{{ route('tasks.edit', ['task' => $task->id]) }}">
+                                        <x-secondary-button class="mt-4">
+                                            {{ __('Edit') }}
+                                        </x-secondary-button>
+                                    </a>
+                                @endif
+                                @if ($task->user_id == Auth::user()->id || Auth::user()->is_admin == true)
+                                    <form action="{{ route('tasks.destroy', ['task' => $task->id]) }}" class="inline-block" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-danger-button class="mt-4"
+                                            onclick="return confirmDelete(event)">
+                                            {{ __('Delete') }}
+                                        </x-danger-button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -49,3 +58,12 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    function confirmDelete(event) {
+        if (!confirm('{{ __('Confirm Delete') }}')) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+</script>

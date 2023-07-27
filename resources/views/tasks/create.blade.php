@@ -12,7 +12,7 @@
                     {{ __("Task Create") }}
                 </div>
             </div>
-            <form action="" method="POST">
+            <form action="{{ route('tasks.store') }}" method="POST">
                 @csrf
                 @method('POST')
                 <div class="mt-4">

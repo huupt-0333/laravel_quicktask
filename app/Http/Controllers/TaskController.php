@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -12,7 +15,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return Task::all();
+        $tasks = DB::table('tasks')->where('user_id', auth()->id())->get();
+
+        return view('tasks.index', [
+            'tasks' => $tasks,
+        ]);
     }
 
     /**
@@ -26,9 +33,17 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        DB::table('tasks')->insert([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('tasks.index');
     }
 
     /**
@@ -36,7 +51,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return view('tasks.show', compact('task'));
     }
 
     /**
@@ -50,9 +65,16 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
-        //
+        $validated = $request->validated();
+
+        DB::table('tasks')->where('id', $task->id)->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+        ]);
+
+        return redirect()->route('tasks.index');
     }
 
     /**
@@ -60,6 +82,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        DB::table('tasks')->where('id', $task->id)->delete();
+
+        return back();
     }
 }

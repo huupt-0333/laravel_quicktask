@@ -12,33 +12,51 @@
                     {{ __("User List") }}
                 </div>
             </div>
-            <x-primary-button class="mt-4">
-                {{ __('Create New User') }}
-            </x-primary-button>
+            <a href="{{ route('users.create') }}">
+                <x-primary-button class="mt-4">
+                    {{ __('Create New User') }}
+                </x-primary-button>
+            </a>
             <table class="table">
                 <thead>
                     <tr>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">#</th>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Name") }}</th>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Username") }}</th>
+                        <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Tasks") }}</th>
                         <th class="text-gray-900 dark:text-gray-100" scope="col">{{ __("Action") }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($users as $index => $user)
-                        <tr class="cursor-pointer" onclick="window.location='{{ route('users.tasks', ['user' => $user]) }}';">
+                        <tr class="cursor-pointer" onclick="window.location='{{ route('users.tasks', ['user' => $user->id]) }}';">
                             <th class="text-gray-900 dark:text-gray-100 text-center" scope="row">{{ $index }}</th>
                             <td class="text-gray-900 dark:text-gray-100 text-center">{{ $user->fullname }}</td>
                             <td class="text-gray-900 dark:text-gray-100 text-center">{{ $user->username }}</td>
                             <td class="text-gray-900 dark:text-gray-100 text-center">
+                                @foreach ($user->tasks as $index => $task)
+                                    {{ $task->name . ", " }}
+                                @endforeach
+                            </td>
+                            <td class="text-gray-900 dark:text-gray-100 text-center">
+                                <a href="{{ route('users.show', ['user' => $user->id]) }}">
+                                    <x-secondary-button class="mt-4">
+                                        {{ __('Detail') }}
+                                    </x-secondary-button>
+                                </a>
                                 <a href="{{ route('users.edit', ['user' => $user->id]) }}">
                                     <x-secondary-button class="mt-4">
                                         {{ __('Edit') }}
                                     </x-secondary-button>
                                 </a>
-                                <x-danger-button class="mt-4">
-                                    {{ __('Delete') }}
-                                </x-danger-button>
+                                <form action="{{ route('users.destroy', ['user' => $user->id]) }}" class="inline-block" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-danger-button class="mt-4"
+                                        onclick="return confirmDelete(event)">
+                                        {{ __('Delete') }}
+                                    </x-danger-button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -47,3 +65,12 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    function confirmDelete(event) {
+        if (!confirm('{{ __('Confirm Delete') }}')) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+</script>
