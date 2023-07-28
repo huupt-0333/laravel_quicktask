@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -41,6 +42,8 @@ class TaskController extends Controller
             'name' => $validated['name'],
             'description' => $validated['description'],
             'user_id' => auth()->id(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
         return redirect()->route('tasks.index');
@@ -72,6 +75,7 @@ class TaskController extends Controller
         DB::table('tasks')->where('id', $task->id)->update([
             'name' => $validated['name'],
             'description' => $validated['description'],
+            'updated_at' => Carbon::now(),
         ]);
 
         return redirect()->route('tasks.index');
